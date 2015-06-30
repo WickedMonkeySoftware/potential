@@ -1,0 +1,9 @@
+user :context {
+	person :aggregate {
+		id :guid;
+
+		// properties
+		name :text;
+		birthday :date;
+	}
+}
