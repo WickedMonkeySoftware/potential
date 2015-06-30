@@ -4,11 +4,32 @@ accounting :context {
 		userId :link to user->person->userId;
 
 		// properties
-		type :link to accounting->sources;
+		type :accounting->sources;
 		amount :decimal;
 		to :text;
 		dateIssued :date;
 		dateResolved :date;
 		resolved :bool;
+
+		// initializer
+		WroteCheck :initializer (type :accounting->sources, amount :decimal, to :text, dateIssued :date, userId :guid) {
+			let ~id = new :guid;
+			let ~userId = userId;
+			let ~type = type;
+			let ~to = to;
+			let ~dateIssued = dateIssued;
+			let ~dateResolved = unknown;
+			let ~resolved = false;
+		}
+
+		ScheduledPayment :initializer (type :accounting->sources, amount :decimal, to :text, dateIssued :date, userId :guid) {
+            let ~id = new :guid;
+            let ~userId = userId;
+            let ~type = type;
+            let ~to = to;
+            let ~dateIssued = dateIssued;
+            let ~dateResolved = unknown;
+            let ~resolved = false;
+        }
 	}
 }

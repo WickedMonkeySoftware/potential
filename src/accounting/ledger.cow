@@ -30,5 +30,16 @@ accounting :context {
 		incomeModify :decimal {
 			is [sum(accounting->income->amount[userId = ~userId]&[start < :date->now]&[start + term > :date->now])];
 		}
+
+		// initializers
+		CreatedLedger :initializer (userId :guid) {
+			let ~id = new :guid;
+			let ~userId = userId;
+			let ~date = :date->now;
+			let ~savingsBalance = 0.0;
+			let ~billModify = 0.0;
+
+			fire CreatedBalanceSheet (userId);
+		}
 	}
 }

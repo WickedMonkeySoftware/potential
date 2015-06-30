@@ -34,5 +34,17 @@ accounting :context {
 		actualPerDay :decimal {
 			is ~actualRemaining / ~daysRemaining;
 		}
+
+		// initializers
+		GotIncome :initializer (start :date, nextEvent :date, source :accounting->sources, amount :decimal, userId :guid) {
+            let ~id = new :guid;
+            let ~userId = ~userId;
+            let ~start = start;
+            let ~term = nextEvent - start;
+            let ~source = source;
+            let ~amount = amount;
+            let ~userId = userId;
+            let ~amountSaved = 0;
+        }
 	}
 }

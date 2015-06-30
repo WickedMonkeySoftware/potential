@@ -13,6 +13,15 @@ accounting :context {
 			is lastCash[0]->totalBalance;
 		}
 
+		// initializer
+		CreatedBalanceSheet :initializer (userId :guid) {
+			let ~id = new :guid;
+			let ~userId = userId;
+
+			fire UpdatedCashBalance (0.0, ~id);
+			fire UpdatedAvailableCredit (0.0, 0.0, 0.0, 0.0, ~id);
+		}
+
 		// aggregates
 		cash :aggregate {
 			id :guid
@@ -20,7 +29,15 @@ accounting :context {
 
 			// properties
 			totalBalance :decimal;
-			date :date;
+			date :dateTime;
+
+			// initializers
+			UpdatedCashBalance :initializer (newBalance :decimal, sheet :guid) {
+				let ~id = new :guid;
+				let ~sheet = sheet;
+				let ~totalBalance = newBalance;
+				let ~date = :dateTime->now;
+			}
 		}
 
 		credit :aggregate {
@@ -32,7 +49,7 @@ accounting :context {
 			availableCredit :decimal;
 			targetRatio :decimal;
 			minimumPayment :decimal;
-			date :date;
+			date :dateTime;
 
 			// computed
 			usedCredit :decimal {
@@ -59,6 +76,16 @@ accounting :context {
 				else {
 					is ~minimumPayment;
 				}
+			}
+
+			// initializers
+			UpdatedAvailableCredit :initializer (availableCredit :decimal, totalCredit :decimal, targetRatio :decimal, minimumPayment :decimal, sheet :guid) {
+				let ~id = new :guid;
+				let ~sheet = sheet;
+				let ~totalCredit = totalCredit;
+				let ~targetRatio = targetRatio;
+				let ~minimumPayment = minimumPayment;
+				let ~date = :dateTime->now;
 			}
 		}
 	}
