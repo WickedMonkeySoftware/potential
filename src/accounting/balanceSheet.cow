@@ -1,0 +1,65 @@
+accounting :context {
+	balanceSheet :aggregate {
+		id :guid;
+		userId :link to user->person->id;
+
+		// properties
+		// nothing here, this is an aggregate root
+
+		// computed
+		latestCashBalance :decimal {
+			let lastCash = accounting->balanceSheet->cash[sheet = ~id]&[date = max(^date)];
+
+			is lastCash[0]->totalBalance;
+		}
+
+		// aggregates
+		cash :aggregate {
+			id :guid
+			sheet :link to accounting->balanceSheet->id
+
+			// properties
+			totalBalance :decimal;
+			date :date;
+		}
+
+		credit :aggregate {
+			id :guid;
+			sheet :link to accounting->balanceSheet->id
+
+			// properties
+			totalCredit :decimal;
+			availableCredit :decimal;
+			targetRatio :decimal;
+			minimumPayment :decimal;
+			date :date;
+
+			// computed
+			usedCredit :decimal {
+				is ~totalCredit - ~availableCredit;
+			}
+
+			percentUsed :decimal {
+				is ~usedCredit / ~totalCredit;
+			}
+
+			remainingCredit :decimal {
+				if (~totalCredit * ~targetRatio - ~usedCredit > 0) {
+					is ~totalCredit * ~targetRatio - ~usedCredit > 0;
+				}
+				else {
+					is 0;
+				}
+			}
+
+			recommendedPayment :decimal {
+				if (((~totalCredit * ~targetRatio) - ~usedCredit) * -1 > 0) {
+					is ((~totalCredit * ~targetRatio) - ~usedCredit) * -1;
+				}
+				else {
+					is ~minimumPayment;
+				}
+			}
+		}
+	}
+}

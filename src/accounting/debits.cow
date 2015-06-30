@@ -1,0 +1,14 @@
+accounting :context {
+	debits :aggregate {
+		id :guid;
+		userId :link to user->person->userId;
+
+		// properties
+		type :link to accounting->sources;
+		amount :decimal;
+		to :text;
+		dateIssued :date;
+		dateResolved :date;
+		resolved :bool;
+	}
+}

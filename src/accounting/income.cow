@@ -1,0 +1,38 @@
+accounting :context {
+	income :aggregate {
+		id :guid;
+		userId :link to user->person->id; // dynamic link
+
+		// properties
+		start :date;
+		term :interval;
+		source :link to accounting->sources; // value based link
+		amount :decimal;
+		amountSaved :decimal;
+
+		// computed properties
+		daysRemaining :int {
+			is math->ceiling(~start + ~term - date->now);
+		}
+
+		amountPerDay :decimal {
+			is ~amount / ~daysRemaining;
+		}
+
+		remaining :decimal {
+			is (~amount - (~amountSaved)) * (~daysRemaining / (~term->days + 1);
+		}
+
+		actualRemaining :decimal {
+			is (~remaining * (
+				accounting->ledger->balance[userId = ~userId]
+				/
+				accounting->ledger->calculatedRemaining[userId = ~userId]
+			));
+		}
+
+		actualPerDay :decimal {
+			is ~actualRemaining / ~daysRemaining;
+		}
+	}
+}

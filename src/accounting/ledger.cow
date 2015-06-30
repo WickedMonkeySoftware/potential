@@ -1,0 +1,34 @@
+accounting :context {
+	ledger :aggregate {
+		id :guid;
+		userId :link to user->person->id;
+
+		// properties
+		date :date;
+		availableBalance :link to accounting->balanceSheet->latestCashBalance[userId = ~userId];
+		savingsBalance :decimal;
+		billModify :decimal;
+
+		// computed
+		outstandingDebits :decimal {
+			is [sum(accounting->debits->amount[userId = ~userId]&[resolved = false]&[dateIssued <= :date->now]))];
+		}
+
+		savingsDelta :decimal {
+			is ~savingsBalance - accounting->expenses->savingsBalance[userId = ~userId]@[date = ~date - interval 1 day]; // replay until
+		}
+
+		balance :decimal {
+			is ~availableBalance - ~outstandingDebits - ~savingsBalance;
+		}
+
+		amountSpent :decimal {
+			let yesterdayBalance = accounting->expenses->savingsBalance[userId = ~userId]@[date = ~date - interval 1 day];
+			is ((((~availableBalance - yesterdayBalance) + ~incomeModify) - billModify)); // todo: factor in credit
+		}
+
+		incomeModify :decimal {
+			is [sum(accounting->income->amount[userId = ~userId]&[start < :date->now]&[start + term > :date->now])];
+		}
+	}
+}

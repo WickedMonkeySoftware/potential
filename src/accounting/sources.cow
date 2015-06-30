@@ -1,0 +1,8 @@
+accounting :context {
+	sources :value {
+		// properties
+		name :text;
+		identifier :text;
+		description :text;
+	}
+}
