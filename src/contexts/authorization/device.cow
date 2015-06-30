@@ -1,7 +1,7 @@
 user :context {
 	device :aggregate {
 		id :guid;
-		userId :link to user->person->id;
+		personId :link to user->person->id;
 
 		// properties
 		deviceFingerprint :guid;

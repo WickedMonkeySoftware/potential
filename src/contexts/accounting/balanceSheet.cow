@@ -14,8 +14,8 @@ accounting :context {
 		}
 
 		// initializer
-		CreatedBalanceSheet :initializer (userId :guid) {
-			let ~id = new :guid;
+		CreatedBalanceSheet :initializer (id :guid, userId :guid) {
+			let ~id = id;
 			let ~userId = userId;
 
 			fire UpdatedCashBalance (0.0, ~id);
@@ -32,8 +32,8 @@ accounting :context {
 			date :dateTime;
 
 			// initializers
-			UpdatedCashBalance :initializer (newBalance :decimal, sheet :guid) {
-				let ~id = new :guid;
+			UpdatedCashBalance :initializer (id :guid, newBalance :decimal, sheet :guid) {
+				let ~id = id;
 				let ~sheet = sheet;
 				let ~totalBalance = newBalance;
 				let ~date = :dateTime->now;
@@ -79,8 +79,8 @@ accounting :context {
 			}
 
 			// initializers
-			UpdatedAvailableCredit :initializer (availableCredit :decimal, totalCredit :decimal, targetRatio :decimal, minimumPayment :decimal, sheet :guid) {
-				let ~id = new :guid;
+			UpdatedAvailableCredit :initializer (id :guid, availableCredit :decimal, totalCredit :decimal, targetRatio :decimal, minimumPayment :decimal, sheet :guid) {
+				let ~id = id;
 				let ~sheet = sheet;
 				let ~totalCredit = totalCredit;
 				let ~targetRatio = targetRatio;

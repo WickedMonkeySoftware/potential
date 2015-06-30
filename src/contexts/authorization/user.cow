@@ -1,0 +1,16 @@
+authorization :context {
+	user :aggregate {
+		id :guid;
+		personId :link to user->person->id;
+
+		// properties
+		username :text;
+		password :text;
+
+		// initializer
+		SignUpUser :initializer (username :text, password :text, personId :guid, id :guid) {
+			let ~personId = personId;
+			let ~id = id;
+		}
+	}
+}

@@ -32,8 +32,8 @@ accounting :context {
 		}
 
 		// initializers
-		CreatedLedger :initializer (userId :guid) {
-			let ~id = new :guid;
+		CreatedLedger :initializer (id :guid, userId :guid) {
+			let ~id = id;
 			let ~userId = userId;
 			let ~date = :date->now;
 			let ~savingsBalance = 0.0;

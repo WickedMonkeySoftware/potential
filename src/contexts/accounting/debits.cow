@@ -12,8 +12,8 @@ accounting :context {
 		resolved :bool;
 
 		// initializer
-		WroteCheck :initializer (type :accounting->sources, amount :decimal, to :text, dateIssued :date, userId :guid) {
-			let ~id = new :guid;
+		WroteCheck :initializer (id :guid, type :accounting->sources, amount :decimal, to :text, dateIssued :date, userId :guid) {
+			let ~id = id;
 			let ~userId = userId;
 			let ~type = type;
 			let ~to = to;
@@ -22,8 +22,8 @@ accounting :context {
 			let ~resolved = false;
 		}
 
-		ScheduledPayment :initializer (type :accounting->sources, amount :decimal, to :text, dateIssued :date, userId :guid) {
-            let ~id = new :guid;
+		ScheduledPayment :initializer (id :guid, type :accounting->sources, amount :decimal, to :text, dateIssued :date, userId :guid) {
+            let ~id = id;
             let ~userId = userId;
             let ~type = type;
             let ~to = to;
