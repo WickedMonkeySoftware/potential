@@ -38,7 +38,7 @@ accounting :context {
 		// initializers
 		GotIncome :initializer (id :guid, start :date, nextEvent :date, source :accounting->sources, amount :decimal, userId :guid) {
 			let ~id = id;
-			let ~userId = ~userId;
+			let ~userId = userId;
 			let ~start = start;
 			let ~term = nextEvent - start;
 			let ~source = source;
